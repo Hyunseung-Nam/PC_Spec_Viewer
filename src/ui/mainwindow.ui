@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1052</width>
+    <height>719</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTableWidget" name="tableWidget">
+    <property name="geometry">
+     <rect>
+      <x>-60</x>
+      <y>-30</y>
+      <width>1171</width>
+      <height>791</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+    background-color: #F9FAFB;
+}</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelTitle">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>-10</y>
+      <width>481</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Nanum Square R</family>
+      <pointsize>-1</pointsize>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {font-size: 30px;
+letter-spacing: -1px;
+line-height: 20px;
+text-transform: uppercase;
+color: #2f2f2e;
+font-family: &quot;Nanum Square R&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>나노메모리 PC 사양 확인 프로그램</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelSubtitle">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>60</y>
+      <width>381</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {font-size: 15px;
+letter-spacing: -1px;
+line-height: 20px;
+text-transform: uppercase;
+color: #063895;
+font-family: &quot;Nanum Square R&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>외장형 저장장치 SSD, HDD, USB를 제거 후 실행 해주세요.</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelQR">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>540</y>
+      <width>101</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px dashed #999999;
+background-color: rgba(47, 128, 237, 0.06);
+border-radius: 6px;</string>
+    </property>
+    <property name="text">
+     <string>QRcode</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnCopySpecs">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>580</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Nanum Square R</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+letter-spacing: -1px;
+line-height: 20px;
+text-transform: uppercase;
+color: #000000;
+font-family: &quot;Nanum Square R&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>PC 사양 복사</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnOpenHomepage">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>580</y>
+      <width>301</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Nanum Square R</family>
+      <pointsize>15</pointsize>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+letter-spacing: -1px;
+line-height: 20px;
+text-transform: uppercase;
+color: #000000;
+font-family: &quot;Nanum Square R&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>홈페이지 매입 견적 문의 게시판</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnOpenKakao">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>580</y>
+      <width>241</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Nanum Square R</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget {
+letter-spacing: -1px;
+line-height: 20px;
+text-transform: uppercase;
+color: #000000;
+font-family: &quot;Nanum Square R&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>카카오톡 문의 바로가기</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textSpecs">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>170</y>
+      <width>871</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTextEdit {
+    background-color: #F9FAFB;
+    border: 1px solid #6BB6FF;
+}</string>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'맑은 고딕'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CPU : Intel(R) Core(TM) i5-14400F @ 2.50GHz&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;RAM :&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;32598 MB ( 31.83 GB ) SAMSUNG DDR5 5600MHz 16gb (2024년1월) SAMSUNG DDR5 5600MHz 16gb (2024년1월)&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;M/B : Gigabyte B760M AORUS ELITE AX x.x&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;VGA :&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;NVIDIA GeForce RTX 3050 ( 6G / NVIDIA ) NVIDIA GeForce RTX 3050 ( 6G / NVIDIA )&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;SSD : SAMSUNG MZVL4256HBJD-00B07 ( 238.47 GB )&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;HDD : SAMSUNG MZVL4256HBJD-00B07 ( 238.47 GB ) &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelLogo">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>50</y>
+      <width>181</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px dashed #999999;
+background-color: rgba(47, 128, 237, 0.06);
+border-radius: 6px;</string>
+    </property>
+    <property name="text">
+     <string>logo</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1052</width>
+     <height>33</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

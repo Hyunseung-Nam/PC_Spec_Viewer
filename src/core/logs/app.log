@@ -1,0 +1,122 @@
+2025-12-26 02:26:04,426 | INFO | __main__ | 앱 시작
+2025-12-26 02:26:04,448 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:26:04,448 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:26:04,457 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:26:04,458 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:26:04,458 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:26:06,318 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:26:06,319 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:26:06,319 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:26:11,280 | INFO | controller | 홈페이지 열기: https://www.nanomemory.co.kr/purchase/inquiry.php?ptype=input&mode=insert&code=inquiry&pos=&code_page=purchase
+2025-12-26 02:26:15,316 | INFO | controller | 카카오톡 채널 열기: http://pf.kakao.com/_xfwxmSxd
+2025-12-26 02:26:19,310 | INFO | controller | PC 사양 클립보드 복사 완료
+2025-12-26 02:26:37,874 | INFO | __main__ | 앱 종료
+2025-12-26 02:27:43,140 | INFO | __main__ | 앱 시작
+2025-12-26 02:27:43,149 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:27:43,149 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:27:43,156 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:27:43,156 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:27:43,156 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:27:44,676 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:27:44,676 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:27:44,676 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:27:46,852 | INFO | __main__ | 앱 종료
+2025-12-26 02:29:04,903 | INFO | __main__ | 앱 시작
+2025-12-26 02:29:04,917 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:29:04,918 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:29:04,924 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:29:04,924 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:29:04,925 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:29:06,171 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:29:06,172 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:29:06,172 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:29:26,014 | INFO | __main__ | 앱 종료
+2025-12-26 02:34:54,560 | INFO | __main__ | 앱 시작
+2025-12-26 02:34:54,573 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:34:54,573 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:34:54,580 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:34:54,580 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:34:54,580 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:34:56,087 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:34:56,088 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:34:56,088 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:35:04,794 | INFO | controller | PC 사양 클립보드 복사 완료
+2025-12-26 02:35:06,914 | INFO | controller | PC 사양 클립보드 복사 완료
+2025-12-26 02:35:07,420 | INFO | controller | 홈페이지 열기: https://www.nanomemory.co.kr/purchase/inquiry.php?ptype=input&mode=insert&code=inquiry&pos=&code_page=purchase
+2025-12-26 02:35:12,174 | INFO | __main__ | 앱 종료
+2025-12-26 02:37:56,163 | INFO | __main__ | 앱 시작
+2025-12-26 02:37:56,177 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:37:56,177 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:37:56,184 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:37:56,184 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:37:56,184 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:37:57,739 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:37:57,740 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:37:57,740 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:38:02,467 | INFO | __main__ | 앱 종료
+2025-12-26 02:38:10,594 | INFO | __main__ | 앱 시작
+2025-12-26 02:38:10,608 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:38:10,608 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:38:10,615 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:38:10,615 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:38:10,615 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:38:11,897 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:38:11,897 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:38:11,897 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:39:06,447 | INFO | __main__ | 앱 종료
+2025-12-26 02:40:39,274 | INFO | __main__ | 앱 시작
+2025-12-26 02:40:39,287 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:40:39,287 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:40:39,293 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:40:39,293 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:40:39,293 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:40:40,827 | INFO | core.collector | 디스크 0 (SAMSUNG MZAL4256HBJD-00BL2): MediaType='fixed hard disk media' → HDD
+2025-12-26 02:40:40,827 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:40:40,828 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:40:40,828 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:40:44,697 | INFO | __main__ | 앱 종료
+2025-12-26 02:44:52,320 | INFO | __main__ | 앱 시작
+2025-12-26 02:44:52,333 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:44:52,333 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:44:52,339 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:44:52,339 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:44:52,339 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:44:54,441 | INFO | core.collector | 디스크 (SAMSUNG MZAL4256HBJD-00BL2): MediaType=4 → SSD
+2025-12-26 02:44:54,441 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:44:54,441 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:44:54,441 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:44:59,008 | INFO | __main__ | 앱 종료
+2025-12-26 02:45:01,347 | INFO | __main__ | 앱 시작
+2025-12-26 02:45:01,361 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:45:01,361 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:45:01,367 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:45:01,367 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:45:01,367 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:45:02,627 | INFO | core.collector | 디스크 (SAMSUNG MZAL4256HBJD-00BL2): MediaType=4 → SSD
+2025-12-26 02:45:02,628 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:45:02,628 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:45:02,628 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:45:16,560 | INFO | controller | PC 사양 클립보드 복사 완료
+2025-12-26 02:46:18,396 | INFO | __main__ | 앱 종료
+2025-12-26 02:50:48,397 | INFO | __main__ | 앱 시작
+2025-12-26 02:50:48,409 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:50:48,410 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:50:48,416 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:50:48,416 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:50:48,417 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:50:49,993 | INFO | core.collector | 디스크 (SAMSUNG MZAL4256HBJD-00BL2): MediaType=4 → SSD
+2025-12-26 02:50:49,993 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:50:49,993 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:50:49,993 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:51:04,638 | INFO | __main__ | 앱 종료
+2025-12-26 02:56:37,771 | INFO | __main__ | 앱 시작
+2025-12-26 02:56:37,782 | INFO | ui.mainwindow_view | MainWindow 초기화 완료
+2025-12-26 02:56:37,782 | INFO | controller | 시그널 바인딩 완료
+2025-12-26 02:56:37,788 | INFO | ui.mainwindow_view | MainWindow connected to Controller: Controller
+2025-12-26 02:56:37,788 | INFO | controller | 자동 사양 수집 시작
+2025-12-26 02:56:37,788 | INFO | core.collector | 시스템 사양 수집 시작
+2025-12-26 02:56:39,328 | INFO | core.collector | 디스크 (SAMSUNG MZAL4256HBJD-00BL2): MediaType=4 → SSD
+2025-12-26 02:56:39,329 | INFO | core.collector | 시스템 사양 수집 완료
+2025-12-26 02:56:39,329 | INFO | controller | 사양 렌더링 완료
+2025-12-26 02:56:39,329 | INFO | controller | 자동 사양 수집 완료
+2025-12-26 02:56:42,330 | INFO | __main__ | 앱 종료
