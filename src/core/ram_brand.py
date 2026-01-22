@@ -31,7 +31,7 @@ class RamBrand(str, Enum):
     UNKNOWN = "Unknown"
 
 
-INVALID_MANUFACTURERS = {"", "unknown", "0000", "04cb", "0", "null", "na", "n/a"}
+INVALID_MANUFACTURERS = {"", "unknown", "0000", "0", "null", "na", "n/a"}
 
 
 def _normalize_text(value: str | None) -> str:
@@ -62,7 +62,9 @@ def _is_invalid_manufacturer(value: str | None) -> bool:
     if not value:
         return True
     stripped = value.strip().lower()
-    return stripped in INVALID_MANUFACTURERS
+    if stripped in INVALID_MANUFACTURERS:
+        return True
+    return re.fullmatch(r"[0-9a-f]{4}", stripped) is not None
 
 
 def _detect_by_manufacturer(manufacturer: str | None) -> RamBrand | None:
