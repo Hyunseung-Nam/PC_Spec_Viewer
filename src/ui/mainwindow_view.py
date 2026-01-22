@@ -16,8 +16,6 @@ from PyQt5.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget
 from PyQt5.QtGui import QIcon, QFont, QResizeEvent
 from PyQt5.QtCore import Qt, QSize
 from .ui_mainwindow import Ui_MainWindow
-from core.path_utils import resource_path
-from core.config import IMAGE_WINDOW_ICON
 
 logger = logging.getLogger(__name__)
 
@@ -53,16 +51,12 @@ class MainWindow(QMainWindow):
         self._font_scale_excludes: set[QWidget] = set()
         self.ui.btnCopySpecs.setCursor(Qt.PointingHandCursor)
 
-        self.setMinimumSize(651, 700)
-        self.resize(700, 750)
+        self.adjustSize()
+        self.setresizedSize(self.size())
         
         self.setWindowTitle("PC 사양 확인 프로그램")
 
         self.ui.labelTitle.setMargin(0)
-
-        icon_path = resource_path(IMAGE_WINDOW_ICON)
-        if icon_path.exists():
-            self.setWindowIcon(QIcon(str(icon_path)))
 
         self.ui.textSpecs.setReadOnly(True)
         self.ui.textSpecs.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

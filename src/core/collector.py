@@ -16,7 +16,10 @@ import logging
 import platform
 import psutil
 
+from core.ram_brand import resolve_ram_brand_display
+
 logger = logging.getLogger(__name__)
+INFO_NOT_PROVIDED = "모듈 정보 미제공"
 
 try:
     import wmi
@@ -127,7 +130,7 @@ def _is_replaceable_ram(mem) -> bool:
     return False
 
 
-def collect_cpu(wmi_conn=None) -> str:
+def collect_cpu(wmi_conn=None, wmi_available: bool | None = None) -> str | None:
     """
     CPU 정보 수집
     
@@ -136,26 +139,36 @@ def collect_cpu(wmi_conn=None) -> str:
     
     Args:
         wmi_conn: WMI 연결 객체 (None이면 새로 생성, 성능 최적화를 위해 재사용 권장)
+        wmi_available: WMI 사용 가능 여부(미지정 시 내부에서 판별)
     
     Returns:
-        str: CPU 이름 (예: "Intel(R) Core(TM) i5-14400F @ 2.50GHz")
+        str | None: CPU 이름 또는 실패 시 None
     """
     try:
-        if _is_windows_wmi_available():
+        if wmi_available is None:
+            wmi_available = _is_windows_wmi_available()
+        wmi_attempted = False
+        if wmi_available:
+            wmi_attempted = True
             if wmi_conn is None:
                 wmi_conn = wmi.WMI()
             processors = wmi_conn.Win32_Processor()
             if processors:
-                cpu_name = processors[0].Name.strip()
-                return cpu_name
+                cpu_name = (processors[0].Name or "").strip()
+                if cpu_name:
+                    return cpu_name
+            if wmi_attempted:
+                logger.info("CPU: WMI 응답은 있으나 이름 미제공")
+                return INFO_NOT_PROVIDED
         logger.debug("CPU: WMI 값을 얻지 못해 platform.processor()로 대체")
-        return platform.processor() or "정보 없음"
+        cpu_name = platform.processor()
+        return cpu_name.strip() if cpu_name and cpu_name.strip() else None
     except Exception as e:
         logger.exception("CPU 정보 수집 실패")
-        return "정보 없음"
+        return None
 
 
-def collect_ram(wmi_conn=None) -> tuple[str, list[str]] | None:
+def collect_ram(wmi_conn=None, wmi_available: bool | None = None) -> tuple[str, list[str]] | None:
     """
     RAM 정보 수집
     
@@ -168,6 +181,7 @@ def collect_ram(wmi_conn=None) -> tuple[str, list[str]] | None:
     
     Args:
         wmi_conn: WMI 연결 객체 (None이면 새로 생성, 성능 최적화를 위해 재사용 권장)
+        wmi_available: WMI 사용 가능 여부(미지정 시 내부에서 판별)
     
     Returns:
         tuple[str, list[str]] | None: {
@@ -181,11 +195,13 @@ def collect_ram(wmi_conn=None) -> tuple[str, list[str]] | None:
     total_gb : float = 0.0
     wmi_total_gb : float = 0.0
     replaceable_seen = False
+    if wmi_available is None:
+        wmi_available = _is_windows_wmi_available()
     wmi_attempted = False
     is_portable = False
         
     try:
-        if _is_windows_wmi_available():
+        if wmi_available:
             wmi_attempted = True
             if wmi_conn is None:
                 wmi_conn = wmi.WMI()
@@ -206,9 +222,11 @@ def collect_ram(wmi_conn=None) -> tuple[str, list[str]] | None:
                         continue
                     size_gb = size_bytes / (1024 ** 3)
                     speed = mem.Speed or "알 수 없음"
-                    manufacturer = mem.Manufacturer or "알 수 없음"
+                    manufacturer = mem.Manufacturer or ""
+                    part_number = mem.PartNumber or ""
+                    brand_display = resolve_ram_brand_display(manufacturer, part_number)
 
-                    ram_list.append(f"{manufacturer} {speed}MHz {size_gb:.0f}GB")
+                    ram_list.append(f"{brand_display} {speed}MHz {size_gb:.0f}GB")
                     
                     total_gb += size_gb
                     
@@ -236,7 +254,7 @@ def collect_ram(wmi_conn=None) -> tuple[str, list[str]] | None:
         logger.exception("RAM 수집 전체 실패")
         return None
 
-def collect_baseboard(wmi_conn=None) -> str:
+def collect_baseboard(wmi_conn=None, wmi_available: bool | None = None) -> str | None:
     """
     메인보드 정보 수집
     
@@ -245,12 +263,15 @@ def collect_baseboard(wmi_conn=None) -> str:
     
     Args:
         wmi_conn: WMI 연결 객체 (None이면 새로 생성, 성능 최적화를 위해 재사용 권장)
+        wmi_available: WMI 사용 가능 여부(미지정 시 내부에서 판별)
     
     Returns:
-        str: 메인보드 정보 (예: "Gigabyte B760M AORUS ELITE AX")
+        str | None: 메인보드 정보 (예: "Gigabyte B760M AORUS ELITE AX")
     """
     try:
-        if _is_windows_wmi_available():
+        if wmi_available is None:
+            wmi_available = _is_windows_wmi_available()
+        if wmi_available:
             if wmi_conn is None:
                 wmi_conn = wmi.WMI()
             boards = wmi_conn.Win32_BaseBoard()
@@ -270,10 +291,10 @@ def collect_baseboard(wmi_conn=None) -> str:
     except Exception as e:
         logger.exception("메인보드 정보 수집 실패")
     
-    return "정보 없음"
+    return None
 
 
-def collect_gpu(wmi_conn=None) -> list[str]:
+def collect_gpu(wmi_conn=None, wmi_available: bool | None = None) -> list[str] | None:
     """
     GPU 정보 수집
 
@@ -286,11 +307,16 @@ def collect_gpu(wmi_conn=None) -> list[str]:
 
     Args:
         wmi_conn: WMI 연결 객체 (None이면 새로 생성, DXGI 실패 시 WMI fallback에서 사용)
+        wmi_available: WMI 사용 가능 여부(미지정 시 내부에서 판별)
 
     Returns:
-        list[str]: GPU 정보 문자열 리스트
+        list[str] | None: GPU 정보 문자열 리스트 또는 실패 시 None
             예: ["NVIDIA GeForce RTX 3050 (6.0GB / NVIDIA)", "Intel UHD Graphics (Intel)"]
     """
+    if wmi_available is None:
+        wmi_available = _is_windows_wmi_available()
+    wmi_attempted = False
+
     # --- 1) DXGI 우선 ---
     if (
         platform.system() == "Windows"
@@ -308,15 +334,19 @@ def collect_gpu(wmi_conn=None) -> list[str]:
     # --- 2) WMI fallback ---
     gpu_list: list[str] = []
     try:
-        if _is_windows_wmi_available():
+        if wmi_available:
+            wmi_attempted = True
             if wmi_conn is None:
                 wmi_conn = wmi.WMI()
             gpus = wmi_conn.Win32_VideoController()
             logger.info(f"GPU: Win32_VideoController {len(gpus)}개 감지")
             
+            if not gpus:
+                return [INFO_NOT_PROVIDED]
+
             for gpu in gpus:
                 try:
-                    name = gpu.Name or "알 수 없음"
+                    name = (gpu.Name or "").strip() or INFO_NOT_PROVIDED
                     adapter_ram = gpu.AdapterRAM or 0
                     if adapter_ram:
                         if adapter_ram <= 0 or adapter_ram < (1024 ** 3):
@@ -331,7 +361,7 @@ def collect_gpu(wmi_conn=None) -> list[str]:
                     
                     manufacturer = ""
                     if hasattr(gpu, 'AdapterCompatibility') and gpu.AdapterCompatibility:
-                        manufacturer = gpu.AdapterCompatibility
+                        manufacturer = str(gpu.AdapterCompatibility).strip()
                     
                     if memory_str and manufacturer:
                         gpu_str = f"{name} ({memory_str} / {manufacturer})"
@@ -349,10 +379,18 @@ def collect_gpu(wmi_conn=None) -> list[str]:
     except Exception as e:
         logger.exception("GPU 정보 수집 실패")
     
-    return gpu_list if gpu_list else ["정보 없음"]
+    if gpu_list:
+        return gpu_list
+    if wmi_attempted:
+        return [INFO_NOT_PROVIDED]
+    return None
 
 
-def collect_storage(wmi_conn=None, wmi_storage=None) -> tuple[list[str], list[str]]:
+def collect_storage(
+    wmi_conn=None,
+    wmi_storage=None,
+    wmi_available: bool | None = None,
+) -> tuple[list[str], list[str]] | None:
     """
     저장장치 정보 수집 및 SSD/HDD 구분
 
@@ -365,23 +403,29 @@ def collect_storage(wmi_conn=None, wmi_storage=None) -> tuple[list[str], list[st
 
     Args:
         wmi_conn: WMI 연결 객체 (사용 안 함, 호환성용)
-        wmi_storage: Storage 네임스페이스 WMI 연결 객체 (None이면 새로 생성, 성능 최적화를 위해 재사용 권장)
+        wmi_storage: Storage 네임스페이스 WMI 연결 객체 (재사용용)
+        wmi_available: WMI 사용 가능 여부(미지정 시 내부에서 판별)
 
     Returns:
-        tuple[list[str], list[str]]: (ssd_list, hdd_list)
+        tuple[list[str], list[str]] | None: (ssd_list, hdd_list) 또는 실패 시 None
     """
     ssd_list: list[str] = []
     hdd_list: list[str] = []
     unknown_list: list[str] = []
 
-    if not _is_windows_wmi_available():
-        return ssd_list, hdd_list
+    if wmi_available is None:
+        wmi_available = _is_windows_wmi_available()
+    if not wmi_available:
+        return None
 
     try:
         if wmi_storage is None:
-            wmi_storage = wmi.WMI(namespace=STORAGE_NAMESPACE)
+            return None
+        disks = wmi_storage.MSFT_PhysicalDisk() or []
+        if not disks:
+            return [INFO_NOT_PROVIDED], [INFO_NOT_PROVIDED]
 
-        for disk in wmi_storage.MSFT_PhysicalDisk():
+        for disk in disks:
             try:
                 name = getattr(disk, "FriendlyName", None) or getattr(disk, "Model", None) or "알 수 없음"
                 name = str(name).strip() if name else "알 수 없음"
@@ -454,13 +498,14 @@ def collect_storage(wmi_conn=None, wmi_storage=None) -> tuple[list[str], list[st
 
     except Exception as e:
         logger.warning("Storage 네임스페이스 접근 실패 (권한/WMI 서비스/OS 상태에 따라 발생할 수 있음)", exc_info=True)
-        return ssd_list, hdd_list
+        return None
 
     if unknown_list:
         logger.debug(f"분류 불가 디스크 {len(unknown_list)} (표시 제외)개")
         
     if not ssd_list and not hdd_list and unknown_list:
         logger.info("Storage: 디스크 감지됨 but 분류 불가 → 표시 제외(오분류 방지)")
+        return [INFO_NOT_PROVIDED], [INFO_NOT_PROVIDED]
     logger.info(f"Storage: SSD {len(ssd_list)}개 / HDD {len(hdd_list)}개 / Unknown {len(unknown_list)}개(표시 제외)")
 
     return ssd_list, hdd_list
@@ -475,33 +520,38 @@ def collect_all_specs() -> dict:
     
     Returns:
         dict: {
-            "cpu": str,
-            "ram": list[str], str
-            "mainboard": str,
-            "vga": list[str],
-            "ssd": list[str],
-            "hdd": list[str]
+            "cpu": str | None,
+            "ram": tuple[str, list[str]] | None,
+            "mainboard": str | None,
+            "vga": list[str] | None,
+            "ssd": list[str] | None,
+            "hdd": list[str] | None
         }
     """
     logger.info("시스템 사양 수집 시작")
     
     # WMI 연결을 한 번만 생성하여 재사용 (성능 최적화)
+    wmi_available = _is_windows_wmi_available()
     wmi_conn = None
     wmi_storage = None
     
     try:
-        if _is_windows_wmi_available():
+        if wmi_available:
             wmi_conn = wmi.WMI()
             wmi_storage = wmi.WMI(namespace=STORAGE_NAMESPACE)
     except Exception as e:
         logger.warning("WMI 연결 생성 실패, 각 함수에서 개별 연결 시도: %s", e)
     
     # WMI 연결을 재사용하여 수집
-    cpu = collect_cpu(wmi_conn)
-    ram = collect_ram(wmi_conn)
-    mainboard = collect_baseboard(wmi_conn)
-    vga = collect_gpu(wmi_conn)
-    ssd, hdd = collect_storage(wmi_conn, wmi_storage)
+    cpu = collect_cpu(wmi_conn, wmi_available)
+    ram = collect_ram(wmi_conn, wmi_available)
+    mainboard = collect_baseboard(wmi_conn, wmi_available)
+    vga = collect_gpu(wmi_conn, wmi_available)
+    storage = collect_storage(wmi_conn, wmi_storage, wmi_available)
+    if storage is None:
+        ssd, hdd = None, None
+    else:
+        ssd, hdd = storage
     
     specs = {
         "cpu": cpu,
@@ -514,7 +564,11 @@ def collect_all_specs() -> dict:
     
     logger.info("시스템 사양 수집 완료")
     
+    ram_count = len(ram[1]) if ram else 0
+    vga_count = len(vga) if vga else 0
+    ssd_count = len(ssd) if ssd else 0
+    hdd_count = len(hdd) if hdd else 0
     logger.info(
     "시스템 사양 수집 요약 | "
-    f"RAM={len(ram[0])}개, VGA={len(vga)}개, SSD={len(ssd)}개, HDD={len(hdd)}개")
+    f"RAM={ram_count}개, VGA={vga_count}개, SSD={ssd_count}개, HDD={hdd_count}개")
     return specs

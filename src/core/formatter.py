@@ -16,23 +16,25 @@ import logging
 from typing import Any
 
 logger = logging.getLogger(__name__)
+INFO_NOT_PROVIDED = "확인되지 않음(모듈 정보 미제공)"
+NOT_INSTALLED = "장착되지 않음"
 
 
 def safe_str(value: Any) -> str:
     """
     값을 문자열로 변환
     
-    None이거나 빈 문자열인 경우 "정보 없음"을 반환
+    None인 경우 "장착되지 않음"을 반환
     
     Args:
         value: 변환할 값
         
     Returns:
-        str: 변환된 문자열 또는 "정보 없음"
+        str: 변환된 문자열 또는 "장착되지 않음"
     """
     if value is None:
-        return "정보 없음"
-    return str(value).strip() or "정보 없음"
+        return NOT_INSTALLED
+    return str(value).strip() or NOT_INSTALLED
 
 def compress_items_xn(items: list[str]) -> list[str]:
     """
@@ -95,10 +97,10 @@ def format_ram_lines(ram_items: list[str]) -> str:
         ram_items: RAM 정보 리스트
         
     Returns:
-        str: 줄바꿈으로 구분된 텍스트 또는 "정보 없음"
+        str: 줄바꿈으로 구분된 텍스트 또는 "장착되지 않음"
     """
     if not ram_items:
-        return "정보 없음"
+        return NOT_INSTALLED
     return "\n".join(ram_items)
 
 
@@ -110,10 +112,10 @@ def format_storage_lines(storage_items: list[str]) -> str:
         storage_items: 저장장치 정보 리스트
         
     Returns:
-        str: 줄바꿈으로 구분된 텍스트 또는 "정보 없음"
+        str: 줄바꿈으로 구분된 텍스트 또는 "장착되지 않음"
     """
     if not storage_items:
-        return "정보 없음"
+        return NOT_INSTALLED
     return "\n".join(storage_items)
 
 
@@ -132,52 +134,60 @@ def format_specs_text(specs: dict) -> str:
     """
     lines = []
     
-    lines.append(f"CPU : {safe_str(specs.get('cpu', '정보 없음'))}")
+    lines.append(f"CPU : {safe_str(specs.get('cpu'))}")
     lines.append("")
     
     ram = specs.get('ram', [])
-    if ram:
+    if ram is None:
+        lines.append(f"RAM : {INFO_NOT_PROVIDED}")
+    elif ram:
         total_gb_text, ram_list = ram
         lines.append("RAM :")
-        if total_gb_text and total_gb_text != "정보 없음":
+        if total_gb_text and total_gb_text != NOT_INSTALLED:
             lines.append(f"  총 용량 : {total_gb_text}")
         if not ram_list:
-            lines.append("  장착형 RAM 없음")
+            lines.append("  메인보드 내장 메모리 (온보드)")
         else:
             for item in ram_list:
                 lines.append(f"  {item}")
     else:
-        lines.append("RAM : 정보 없음")
+        lines.append(f"RAM : {NOT_INSTALLED}")
     lines.append("")
     
-    lines.append(f"M/B : {safe_str(specs.get('mainboard', '정보 없음'))}")
+    lines.append(f"M/B : {safe_str(specs.get('mainboard'))}")
     lines.append("")
     
     vga_items = specs.get('vga', [])
-    if vga_items:
+    if vga_items is None:
+        lines.append(f"VGA : {INFO_NOT_PROVIDED}")
+    elif vga_items:
         lines.append("VGA :")
         for vga in vga_items:
             lines.append(f"  {vga}")
     else:
-        lines.append("VGA : 정보 없음")
+        lines.append(f"VGA : {NOT_INSTALLED}")
     lines.append("")
     
     ssd_items = specs.get('ssd', [])
-    if ssd_items:
+    if ssd_items is None:
+        lines.append(f"SSD : {INFO_NOT_PROVIDED}")
+    elif ssd_items:
         lines.append("SSD :")
         for ssd in ssd_items:
             lines.append(f"  {ssd}")
     else:
-        lines.append("SSD : 정보 없음")
+        lines.append(f"SSD : {NOT_INSTALLED}")
     lines.append("")
     
     hdd_items = specs.get('hdd', [])
-    if hdd_items:
+    if hdd_items is None:
+        lines.append(f"HDD : {INFO_NOT_PROVIDED}")
+    elif hdd_items:
         lines.append("HDD :")
         for hdd in hdd_items:
             lines.append(f"  {hdd}")
     else:
-        lines.append("HDD : 정보 없음")
+        lines.append(f"HDD : {NOT_INSTALLED}")
     
     
     return "\n".join(lines)
@@ -218,7 +228,7 @@ def _render_list_rows(label: str, items: list[str], add_sep: bool = True) -> str
         str: HTML 문자열
     """
     if not items:
-        items = [None]
+        items = [NOT_INSTALLED]
 
     rows = []
     rows.append(f"""
@@ -312,16 +322,27 @@ tr.sep-row td {{
         ram_list = compress_items_xn(ram_list)
 
         if not ram_list:
-            ram_items = [f"총 용량 : {total_str}", "장착형 RAM 없음"]
+            ram_items = [f"총 용량 : {total_str}", "메인보드 내장 메모리 (온보드)"]
         else:
             ram_items = [f"총 용량 : {total_str}"] + ram_list
         html += _render_list_rows("RAM", ram_items, add_sep=True)
     else:
         html += _render_single_row("RAM", None, add_sep=True)
     html += _render_single_row("M/B", spec.get("mainboard"), add_sep=True)
-    html += _render_list_rows("VGA", spec.get("vga", []), add_sep=True)
-    html += _render_list_rows("SSD", spec.get("ssd", []), add_sep=True)
-    html += _render_list_rows("HDD", spec.get("hdd", []), add_sep=False)
+    vga_items = spec.get("vga", [])
+    if vga_items is None:
+        vga_items = [INFO_NOT_PROVIDED]
+    html += _render_list_rows("VGA", vga_items, add_sep=True)
+
+    ssd_items = spec.get("ssd", [])
+    if ssd_items is None:
+        ssd_items = [INFO_NOT_PROVIDED]
+    html += _render_list_rows("SSD", ssd_items, add_sep=True)
+
+    hdd_items = spec.get("hdd", [])
+    if hdd_items is None:
+        hdd_items = [INFO_NOT_PROVIDED]
+    html += _render_list_rows("HDD", hdd_items, add_sep=False)
 
     return html
 
