@@ -50,9 +50,6 @@ class MainWindow(QMainWindow):
         self._loading_label: QLabel | None = None
         self._font_scale_excludes: set[QWidget] = set()
         self.ui.btnCopySpecs.setCursor(Qt.PointingHandCursor)
-
-        self.adjustSize()
-        self.setresizedSize(self.size())
         
         self.setWindowTitle("PC 사양 확인 프로그램")
 
