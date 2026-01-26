@@ -18,6 +18,7 @@ from typing import Any
 logger = logging.getLogger(__name__)
 INFO_NOT_PROVIDED = "확인되지 않음(모듈 정보 미제공)"
 NOT_INSTALLED = "장착되지 않음"
+SYSTEM_TYPE_UNKNOWN = "유형 미확정"
 
 
 def safe_str(value: Any) -> str:
@@ -35,6 +36,22 @@ def safe_str(value: Any) -> str:
     if value is None:
         return NOT_INSTALLED
     return str(value).strip() or NOT_INSTALLED
+
+
+def _format_system_type(value: Any) -> str:
+    """
+    시스템 유형 값을 안전하게 문자열로 변환한다.
+
+    Args:
+        value: 변환할 값
+
+    Returns:
+        str: 변환된 문자열 또는 "유형 미확정"
+    """
+    if value is None:
+        return SYSTEM_TYPE_UNKNOWN
+    text = str(value).strip()
+    return text or SYSTEM_TYPE_UNKNOWN
 
 def compress_items_xn(items: list[str]) -> list[str]:
     """
@@ -134,6 +151,9 @@ def format_specs_text(specs: dict) -> str:
     """
     lines = []
     
+    system_type = _format_system_type(specs.get("system_type"))
+    lines.append(f"PC 유형 : {system_type}")
+    lines.append("")
     lines.append(f"CPU : {safe_str(specs.get('cpu'))}")
     lines.append("")
     
@@ -315,6 +335,8 @@ tr.sep-row td {{
 <table>
 """
 
+    system_type = _format_system_type(spec.get("system_type"))
+    html += _render_single_row("PC 유형", system_type, add_sep=True)
     html += _render_single_row("CPU", spec.get("cpu"), add_sep=True)
     ram = spec.get("ram")
     if ram:

@@ -30,6 +30,7 @@ class CollectorWrapper:
         
         Returns:
             dict: {
+                "system_type": str,
                 "cpu": str,
                 "ram": tuple[list[str], str],
                 "mainboard": str,
@@ -50,6 +51,7 @@ def _collect_specs_via_wrapper(wrapper: ISpecCollector) -> dict:
 
     Returns:
         dict: {
+            "system_type": str,
             "cpu": str,
             "ram": tuple[list[str], str],
             "mainboard": str,

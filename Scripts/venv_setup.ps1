@@ -48,7 +48,7 @@ while ($true) {
 
 if (-not $PROJECT_ROOT) {
     Write-Host "[FAIL] Project root not found."
-    Write-Host "[OK] None of the following files(.gitignore, requirement.txt, python-version.py) were found in any parent directory:"
+    Write-Host "[FAIL] None of the following files were found in any parent directory:"
     foreach ($marker in $ROOT_MARKERS) {
         Write-Host "   - $marker"
     }
@@ -100,7 +100,7 @@ Write-Host ""
 
 try {
     $pyVersion = py --version 2>&1
-    Write-Host "✔ py launcher detected: $pyVersion"
+    Write-Host "[OK] py launcher detected: $pyVersion"
 } catch {
     Write-Host "[FAIL] py launcher not found."
     Write-Host "[OK] Install Python from python.org (includes py launcher)."

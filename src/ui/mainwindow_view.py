@@ -41,6 +41,7 @@ class MainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.resize(720, 820)
         
         self._base_window_size = QSize()
         self._base_dpi = 96.0

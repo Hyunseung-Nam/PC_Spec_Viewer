@@ -20,6 +20,10 @@ from core.ram_brand import resolve_ram_brand_display
 
 logger = logging.getLogger(__name__)
 INFO_NOT_PROVIDED = "모듈 정보 미제공"
+SYSTEM_TYPE_DESKTOP = "데스크탑"
+SYSTEM_TYPE_LAPTOP = "노트북"
+SYSTEM_TYPE_ALL_IN_ONE = "올인원 PC"
+SYSTEM_TYPE_UNKNOWN = "유형 미확정"
 
 try:
     import wmi
@@ -47,6 +51,10 @@ BUS_TYPE_NVME = 17
 BUS_TYPE_NVME_STR = "nvme"
 ROTATION_RATE_HDD_THRESHOLD = 1000
 BYTES_PER_GB = 1024 ** 3
+
+CHASSIS_TYPES_PORTABLE = {8, 9, 10, 14, 30, 31, 32}
+CHASSIS_TYPES_DESKTOP = {3, 4, 6, 7, 15, 16, 17}
+CHASSIS_TYPES_ALL_IN_ONE = {13}
 
 
 def _is_windows_wmi_available() -> bool:
@@ -82,8 +90,7 @@ def _is_portable_system(wmi_conn=None) -> bool:
         enclosures = wmi_conn.Win32_SystemEnclosure()
         if enclosures:
             chassis_types = enclosures[0].ChassisTypes or []
-            portable_types = {8, 9, 10, 14, 30, 31, 32}
-            if any(ct in portable_types for ct in chassis_types):
+            if any(ct in CHASSIS_TYPES_PORTABLE for ct in chassis_types):
                 return True
 
         systems = wmi_conn.Win32_ComputerSystem()
@@ -122,12 +129,72 @@ def _is_replaceable_ram(mem) -> bool:
         return False
 
     if form_factor == 12 or "SODIMM" in locator_text:
-        return False
+        return True
 
     if form_factor == 8 or "DIMM" in locator_text:
         return True
 
     return False
+
+
+def collect_system_type(wmi_conn=None, wmi_available: bool | None = None) -> str | None:
+    """
+    시스템 유형(데스크탑/노트북/올인원 PC)을 판별한다.
+
+    Args:
+        wmi_conn: WMI 연결 객체 (None이면 새로 생성, 성능 최적화를 위해 재사용 권장)
+        wmi_available: WMI 사용 가능 여부(미지정 시 내부에서 판별)
+
+    Returns:
+        str | None: 시스템 유형 문자열 또는 실패 시 None
+
+    Side Effects:
+        - WMI 연결을 생성할 수 있다.
+        - 실패 시 경고 로그를 남긴다.
+
+    Raises:
+        없음 (모든 예외는 내부에서 처리)
+    """
+    try:
+        if wmi_available is None:
+            wmi_available = _is_windows_wmi_available()
+        if not wmi_available:
+            return None
+        if wmi_conn is None:
+            wmi_conn = wmi.WMI()
+
+        chassis_types: list[int] = []
+        try:
+            enclosures = wmi_conn.Win32_SystemEnclosure()
+            if enclosures:
+                chassis_types = list(enclosures[0].ChassisTypes or [])
+        except Exception as e:
+            logger.warning(f"SystemEnclosure 조회 실패: {e}")
+
+        if chassis_types:
+            has_aio = any(ct in CHASSIS_TYPES_ALL_IN_ONE for ct in chassis_types)
+            has_portable = any(ct in CHASSIS_TYPES_PORTABLE for ct in chassis_types)
+            has_desktop = any(ct in CHASSIS_TYPES_DESKTOP for ct in chassis_types)
+
+            if has_aio and not (has_portable or has_desktop):
+                return SYSTEM_TYPE_ALL_IN_ONE
+            if has_portable and not (has_aio or has_desktop):
+                return SYSTEM_TYPE_LAPTOP
+            if has_desktop and not (has_aio or has_portable):
+                return SYSTEM_TYPE_DESKTOP
+        else:
+            systems = wmi_conn.Win32_ComputerSystem()
+            if systems:
+                pc_system_type = int(getattr(systems[0], "PCSystemType", 0) or 0)
+                pc_system_type_ex = int(getattr(systems[0], "PCSystemTypeEx", 0) or 0)
+                if pc_system_type in (2, 8) or pc_system_type_ex in (2, 8):
+                    return SYSTEM_TYPE_LAPTOP
+                if pc_system_type in (1,) or pc_system_type_ex in (1,):
+                    return SYSTEM_TYPE_DESKTOP
+    except Exception as e:
+        logger.warning(f"시스템 유형 판별 실패: {e}")
+
+    return SYSTEM_TYPE_UNKNOWN
 
 
 def collect_cpu(wmi_conn=None, wmi_available: bool | None = None) -> str | None:
@@ -198,14 +265,12 @@ def collect_ram(wmi_conn=None, wmi_available: bool | None = None) -> tuple[str, 
     if wmi_available is None:
         wmi_available = _is_windows_wmi_available()
     wmi_attempted = False
-    is_portable = False
         
     try:
         if wmi_available:
             wmi_attempted = True
             if wmi_conn is None:
                 wmi_conn = wmi.WMI()
-            is_portable = _is_portable_system(wmi_conn)
             memory_modules = wmi_conn.Win32_PhysicalMemory() or []
             
             for mem in memory_modules:
@@ -213,8 +278,6 @@ def collect_ram(wmi_conn=None, wmi_available: bool | None = None) -> tuple[str, 
                     size_bytes = int(mem.Capacity or 0)
                     if size_bytes > 0:
                         wmi_total_gb += size_bytes / (1024 ** 3)
-                    if is_portable:
-                        continue
                     if not _is_replaceable_ram(mem):
                         continue
                     replaceable_seen = True
@@ -520,6 +583,7 @@ def collect_all_specs() -> dict:
     
     Returns:
         dict: {
+            "system_type": str | None,
             "cpu": str | None,
             "ram": tuple[str, list[str]] | None,
             "mainboard": str | None,
@@ -543,6 +607,7 @@ def collect_all_specs() -> dict:
         logger.warning("WMI 연결 생성 실패, 각 함수에서 개별 연결 시도: %s", e)
     
     # WMI 연결을 재사용하여 수집
+    system_type = collect_system_type(wmi_conn, wmi_available)
     cpu = collect_cpu(wmi_conn, wmi_available)
     ram = collect_ram(wmi_conn, wmi_available)
     mainboard = collect_baseboard(wmi_conn, wmi_available)
@@ -554,6 +619,7 @@ def collect_all_specs() -> dict:
         ssd, hdd = storage
     
     specs = {
+        "system_type": system_type,
         "cpu": cpu,
         "ram": ram,
         "mainboard": mainboard,

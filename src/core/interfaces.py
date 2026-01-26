@@ -35,6 +35,7 @@ class ISpecCollector(Protocol):
         
         Returns:
             dict: {
+                "system_type": str,
                 "cpu": str,
                 "ram": tuple[list[str], str],
                 "mainboard": str,
